@@ -4,6 +4,12 @@
 # you can put other ip address below
 #10.104.0.2 ansible_sudo_pass=Tin0439Pen ansible_ssh_user=root
 #10.104.0.3
-
+[web_servers]
+10.104.0.2 ansible_ssh_pass='Tin0439Pen' ansible_user='root'
+10.104.0.4 ansible_ssh_pass='Tin0439Pen' ansible_user='root'
+[db_servers]
+10.104.0.2 ansible_ssh_pass='Tin0439Pen' ansible_user='root'
+10.104.0.4 ansible_ssh_pass='Tin0439Pen' ansible_user='root'
+[file_servers]
 10.104.0.2 ansible_ssh_pass='Tin0439Pen' ansible_user='root'
 10.104.0.4 ansible_ssh_pass='Tin0439Pen' ansible_user='root'

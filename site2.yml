@@ -1,0 +1,65 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+ 
+  - name: Install updates (CentOS)
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution =="CentOS"
+
+  - name: Install updates (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: Install apache and PHP for Ubuntu
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install apache and PHP for CentOS
+    dnf:
+      name:
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: Install Mariadb package (CentOS)
+    yum:
+      name: 
+        - mariadb-server
+        - python3-PyMySQL
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Mariadb- Restart/Enable 
+    service:
+      name: mariadb
+      state: started
+      enabled: true
+
+  - name: Install MariaDB repository (Ubuntu)
+    apt_repository: repo='deb http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.0/ubuntu trusty main' state=present
+    when: ansible_distribution =="ubuntu" 
+  - name: Add repository key to the system
+    apt_key: keyserver=keyserver.ubuntu.com id=0xcbcb082a1bb943db
+    when: ansible_distribution =="ubuntu"
+  - name: Install MariaDB Server
+    apt: name=mariadb-server state=latest update_cache=yes
+    when: ansible_distribution =="ubuntu"
+  
